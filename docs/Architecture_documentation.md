@@ -2,58 +2,7 @@
 
 ### 1. Структурная диаграмма
 
-```mermaid
-graph TD
-    A[Input Processor] --> B[Lexer]
-    B --> C[Parser]
-    C --> D[Environment Manager]
-    C --> E[Command Factory]
-    E --> F[Command Executor]
-    F --> G[Process Manager]
-    G --> H[I/O Redirector]
-    D --> F
-    H --> F
-
-    I[Abstract Command]
-    J[Builtin Command]
-    K[External Command]
-    L[Pipeline Command]
-    M[Cat Command]
-    N[Wc Command]
-    O[Echo Command]
-    P[Pwd Command]
-    Q[Exit Command]
-
-    I -- inherits --> J
-    I -- inherits --> K
-    I -- inherits --> L
-    J -- inherits --> M
-    J -- inherits --> N
-    J -- inherits --> O
-    J -- inherits --> P
-    J -- inherits --> Q
-
-    E --> I
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#f9f,stroke:#333,stroke-width:2px
-    style G fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#f9f,stroke:#333,stroke-width:2px
-
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-    style J fill:#ccf,stroke:#333,stroke-width:2px
-    style K fill:#ccf,stroke:#333,stroke-width:2px
-    style L fill:#ccf,stroke:#333,stroke-width:2px
-    style M fill:#ccf,stroke:#333,stroke-width:2px
-    style N fill:#ccf,stroke:#333,stroke-width:2px
-    style O fill:#ccf,stroke:#333,stroke-width:2px
-    style P fill:#ccf,stroke:#333,stroke-width:2px
-    style Q fill:#ccf,stroke:#333,stroke-width:2px
-```
+<img src="resources/diagram.png">
 
 ### 2. Словесное описание работы системы
 
