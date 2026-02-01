@@ -1,0 +1,79 @@
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+build/
+*.cbp # CodeBlocks
+*.workspace # CodeBlocks
+*.Makefile 
+
+# Executables and object files
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.ko
+*.mod
+
+# Editor and IDE-specific files
+.idea
+.vscode
+*.swp
+*~ 
+
+# Visual Studio / MSVC
+*.aps
+*.bsc
+*.ncb
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.ilk
+*.aps
+*.pdb 
+*.ipch
+*.VC.opendb
+*.VC.db
+ipch/
+Debug/
+Release/
+x64/
+Win32/
+bin/
+obj/
+GeneratedFiles/
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Build artifacts
+*.core
+*.log
+*.tgz
+*.zip
+*.tar
+*.iso
+
+# Doxygen
+html/
+latex/
+doxygen.log
+
+# Ctest output
+Testing/
+_CPack_Packages/
+
+# Other temporary files
+*~
+
+# Logs
+log/
+tmp/
