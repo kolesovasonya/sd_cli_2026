@@ -9,8 +9,17 @@ endif()
 
 add_executable(my_cli_app main.cpp)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        release-1.12.1
+)
+
+FetchContent_MakeAvailable(googletest)
+
 enable_testing()
-find_package(GTest CONFIG REQUIRED)
 
 add_executable(my_cli_app_test test/main_test.cpp)
 
