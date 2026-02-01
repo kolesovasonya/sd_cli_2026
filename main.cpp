@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
 
-std::string greet(const std::string& name) {
-    return "Hello, " + name + "!";
-}
+std::string greet(const std::string& name) { return "Hello, " + name + "!"; }
 
 int main(int argc, char* argv[]) {
     std::string name = "World";
