@@ -8,3 +8,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 add_executable(my_cli_app main.cpp)
+
+enable_testing()
+find_package(GTest CONFIG REQUIRED)
+
+add_executable(my_cli_app_test test/main_test.cpp)
+
+target_link_libraries(my_cli_app_test PRIVATE GTest::gtest_main)
+
+add_test(NAME MyCliAppTests COMMAND my_cli_app_test)

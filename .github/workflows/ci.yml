@@ -1,0 +1,89 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build and Test on ${{ matrix.os }} with GCC-${{ matrix.gcc_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        gcc_version: [9, 10, 11]
+        exclude:
+          - os: macos-latest
+            gcc_version: 9
+          - os: macos-latest
+            gcc_version: 10
+          - os: macos-latest
+            gcc_version: 11
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install C++ compiler (Ubuntu)
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-${{ matrix.gcc_version }} g++-${{ matrix.gcc_version }} libgtest-dev cmake
+        echo "CC=/usr/bin/gcc-${{ matrix.gcc_version }}" >> $GITHUB_ENV
+        echo "CXX=/usr/bin/g++-${{ matrix.gcc_version }}" >> $GITHUB_ENV
+
+    - name: Create Build Directory
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: |
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+
+    - name: Build Project
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build . --config Release -j$(nproc)
+    
+    - name: Run Tests
+      if: success()
+      working-directory: ${{github.workspace}}/build
+      run: ctest --output-on-failure
+
+    - name: Run Executable
+      if: success()
+      working-directory: ${{github.workspace}}/build
+      run: ./my_cli_app "GitHub Actions"
+
+  style:
+    name: Code Style and Lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install clang-format and clang-tidy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format clang-tidy
+
+    - name: Check Code Formatting with clang-format
+      run: |
+        find . -name "*.h" -o -name "*.hpp" -o -name "*.c" -o -name "*.cpp" | xargs clang-format -i -style=file
+        git diff --exit-code --name-only
+
+    - name: Create Build Directory for clang-tidy
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure CMake for Clang-Tidy
+      working-directory: ${{github.workspace}}/build
+      run: |
+        cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+    - name: Run clang-tidy
+      working-directory: ${{github.workspace}}/build
+      run: |
+        run-clang-tidy.py -p . -header-filter=.* -j$(nproc) || true
