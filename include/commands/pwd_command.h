@@ -12,7 +12,7 @@ public:
      * @brief Constructs pwd command
      */
     PwdCommand() = default;
-    
+
     /**
      * @brief Executes pwd command
      * @param input Input stream
@@ -20,7 +20,8 @@ public:
      * @param error Error stream
      * @return Exit code (0 for success, 1 for error)
      */
-    int execute(std::istream& input, std::ostream& output, std::ostream& error) override;
+    int execute(std::istream& input, std::ostream& output,
+                std::ostream& error) override;
 };
 
 #endif

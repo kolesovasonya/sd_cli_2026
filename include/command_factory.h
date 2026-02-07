@@ -19,10 +19,8 @@ public:
      * @return Unique pointer to created command
      */
     std::unique_ptr<AbstractCommand> createCommand(
-        const std::string& name,
-        const std::vector<std::string>& args
-    );
-    
+        const std::string& name, const std::vector<std::string>& args);
+
 private:
     bool isBuiltinCommand(const std::string& name) const;
 };

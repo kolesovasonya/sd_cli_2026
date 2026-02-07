@@ -1,8 +1,8 @@
 #ifndef COMMAND_EXECUTOR_H
 #define COMMAND_EXECUTOR_H
 
-#include <memory>
 #include <iostream>
+#include <memory>
 
 class AbstractCommand;
 
@@ -19,12 +19,9 @@ public:
      * @param error Error stream
      * @return Command exit code
      */
-    int execute(
-        AbstractCommand* command,
-        std::istream& input = std::cin,
-        std::ostream& output = std::cout,
-        std::ostream& error = std::cerr
-    );
+    int execute(AbstractCommand* command, std::istream& input = std::cin,
+                std::ostream& output = std::cout,
+                std::ostream& error = std::cerr);
 };
 
 #endif

@@ -3,11 +3,12 @@
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 #endif
 
-int PwdCommand::execute(std::istream& input, std::ostream& output, std::ostream& error) {
+int PwdCommand::execute(std::istream& input, std::ostream& output,
+                        std::ostream& error) {
 #ifdef _WIN32
     char buffer[MAX_PATH];
     if (GetCurrentDirectoryA(MAX_PATH, buffer)) {
@@ -21,7 +22,7 @@ int PwdCommand::execute(std::istream& input, std::ostream& output, std::ostream&
         return 0;
     }
 #endif
-    
+
     error << "pwd: failed to get current directory" << std::endl;
     return 1;
 }

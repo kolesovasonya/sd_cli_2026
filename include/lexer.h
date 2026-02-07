@@ -7,12 +7,7 @@
 /**
  * @brief Type of lexical token
  */
-enum class TokenType {
-    WORD,
-    QUOTED_SINGLE,
-    QUOTED_DOUBLE,
-    ASSIGNMENT
-};
+enum class TokenType { WORD, QUOTED_SINGLE, QUOTED_DOUBLE, ASSIGNMENT };
 
 /**
  * @brief Represents a single lexical token
@@ -20,7 +15,7 @@ enum class TokenType {
 struct Token {
     TokenType type;
     std::string value;
-    
+
     /**
      * @brief Constructs token with type and value
      * @param t Token type
@@ -40,12 +35,12 @@ public:
      * @return Vector of tokens
      */
     std::vector<Token> tokenize(const std::string& input);
-    
+
 private:
     void skipWhitespace();
     Token readQuotedToken(char quote);
     Token readWordToken();
-    
+
     std::string input_;
     size_t pos_;
 };

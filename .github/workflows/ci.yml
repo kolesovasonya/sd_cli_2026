@@ -55,7 +55,7 @@ jobs:
     - name: Run Executable
       if: success()
       working-directory: ${{github.workspace}}/build
-      run: ./my_cli_app "GitHub Actions"
+      run: ./cli_app "GitHub Actions"
 
   style:
     name: Code Style and Lint
