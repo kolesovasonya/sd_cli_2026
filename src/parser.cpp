@@ -48,9 +48,36 @@ void Parser::handleAssignment(const std::vector<Token>& tokens) {
 }
 
 std::string Parser::resolveValue(const Token& token) {
+    if (token.type == TokenType::QUOTED_SINGLE) {
+        return token.value;
+    }
+    
+    if (token.type == TokenType::QUOTED_DOUBLE) {
+        std::string result = token.value;
+        size_t pos = 0;
+        while ((pos = result.find('$', pos)) != std::string::npos) {
+            size_t end = pos + 1;
+            while (end < result.length() && 
+                   (std::isalnum(result[end]) || result[end] == '_')) {
+                end++;
+            }
+            
+            if (end > pos + 1) {
+                std::string varName = result.substr(pos + 1, end - pos - 1);
+                std::string varValue = envManager_.getVariable(varName);
+                result.replace(pos, end - pos, varValue);
+                pos += varValue.length();
+            } else {
+                pos++;
+            }
+        }
+        return result;
+    }
+    
     if (token.type == TokenType::WORD && !token.value.empty() && token.value[0] == '$') {
         std::string varName = token.value.substr(1);
         return envManager_.getVariable(varName);
     }
+    
     return token.value;
 }

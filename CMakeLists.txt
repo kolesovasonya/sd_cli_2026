@@ -40,3 +40,30 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(googletest)
+
+set(TEST_SOURCES
+    test/test_main.cpp
+    test/test_lexer.cpp
+    test/test_parser.cpp
+    test/test_commands.cpp
+    test/test_quotes.cpp
+    test/test_environment.cpp
+    src/input_processor.cpp
+    src/lexer.cpp
+    src/parser.cpp
+    src/environment_manager.cpp
+    src/command_factory.cpp
+    src/command_executor.cpp
+    src/process_manager.cpp
+    src/commands/cat_command.cpp
+    src/commands/wc_command.cpp
+    src/commands/echo_command.cpp
+    src/commands/pwd_command.cpp
+    src/commands/exit_command.cpp
+    src/commands/external_command.cpp
+)
+
+add_executable(cli_tests ${TEST_SOURCES})
+target_link_libraries(cli_tests gtest gtest_main)
+
+add_test(NAME cli_tests COMMAND cli_tests)
