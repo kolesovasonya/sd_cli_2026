@@ -1,28 +1,42 @@
-cmake_minimum_required(VERSION 3.10)
-project(MyCliApp VERSION 0.1.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(cli_interpreter)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include_directories(include)
+
+set(SOURCES
+    src/main.cpp
+    src/input_processor.cpp
+    src/lexer.cpp
+    src/parser.cpp
+    src/environment_manager.cpp
+    src/command_factory.cpp
+    src/command_executor.cpp
+    src/process_manager.cpp
+    src/commands/cat_command.cpp
+    src/commands/wc_command.cpp
+    src/commands/echo_command.cpp
+    src/commands/pwd_command.cpp
+    src/commands/exit_command.cpp
+    src/commands/external_command.cpp
+)
+
+add_executable(cli_app ${SOURCES})
+
+if(WIN32)
+    target_compile_definitions(cli_app PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
-add_executable(my_cli_app main.cpp)
+enable_testing()
 
 include(FetchContent)
 
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        release-1.12.1
+    GIT_TAG release-1.12.1
 )
 
 FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
-add_executable(my_cli_app_test test/main_test.cpp)
-
-target_link_libraries(my_cli_app_test PRIVATE GTest::gtest_main)
-
-add_test(NAME MyCliAppTests COMMAND my_cli_app_test)
