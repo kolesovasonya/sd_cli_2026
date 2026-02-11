@@ -1,0 +1,37 @@
+#include "command_factory.h"
+
+#include "commands/abstract_command.h"
+#include "commands/cat_command.h"
+#include "commands/echo_command.h"
+#include "commands/exit_command.h"
+#include "commands/external_command.h"
+#include "commands/pwd_command.h"
+#include "commands/wc_command.h"
+
+std::unique_ptr<AbstractCommand> CommandFactory::createCommand(
+    const std::string& name, const std::vector<std::string>& args) {
+    if (name == "cat") {
+        if (args.empty()) {
+            return nullptr;
+        }
+        return std::make_unique<CatCommand>(args[0]);
+    } else if (name == "wc") {
+        if (args.empty()) {
+            return nullptr;
+        }
+        return std::make_unique<WcCommand>(args[0]);
+    } else if (name == "echo") {
+        return std::make_unique<EchoCommand>(args);
+    } else if (name == "pwd") {
+        return std::make_unique<PwdCommand>();
+    } else if (name == "exit") {
+        return std::make_unique<ExitCommand>();
+    } else {
+        return std::make_unique<ExternalCommand>(name, args);
+    }
+}
+
+bool CommandFactory::isBuiltinCommand(const std::string& name) const {
+    return name == "cat" || name == "wc" || name == "echo" || name == "pwd" ||
+           name == "exit";
+}

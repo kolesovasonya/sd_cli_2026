@@ -21,6 +21,57 @@ The interpreter supports the following functionalities:
 *   **Input/Output Stream Handling**: Flexible management of standard input, output, and error streams for commands.
 *   **Exit Codes**: Capturing and respecting command exit codes to determine their execution status.
 
+## Build Requirements
+
+- CMake 3.14 or higher
+- C++17 compatible compiler (GCC, Clang, MSVC)
+- Make (optional, can use CMake directly)
+
+## Build Instructions
+
+### Using Make (Linux/macOS/Windows with Make)
+
+```bash
+make cli_app
+```
+
+### Using CMake directly
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+## Running
+
+## Linux/macOS
+
+```bash
+./cli_app
+```
+
+## Windows
+
+```bash
+cli_app.exe
+```
+
+## Running Tests
+
+### Using Make
+
+```bash
+make test
+```
+
+### Using CMake directly
+
+```bash
+cd build
+ctest --output-on-failure
+```
 
 ##
 
