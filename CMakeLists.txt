@@ -21,6 +21,7 @@ set(SOURCES
     src/commands/pwd_command.cpp
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
+    src/commands/pipeline_command.cpp
 )
 
 add_executable(cli_app ${SOURCES})
@@ -48,6 +49,7 @@ set(TEST_SOURCES
     test/test_commands.cpp
     test/test_quotes.cpp
     test/test_environment.cpp
+    test/test_pipeline.cpp
     src/input_processor.cpp
     src/lexer.cpp
     src/parser.cpp
@@ -61,6 +63,7 @@ set(TEST_SOURCES
     src/commands/pwd_command.cpp
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
+    src/commands/pipeline_command.cpp
 )
 
 add_executable(cli_tests ${TEST_SOURCES})

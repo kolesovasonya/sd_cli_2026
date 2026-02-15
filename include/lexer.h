@@ -7,7 +7,7 @@
 /**
  * @brief Type of lexical token
  */
-enum class TokenType { WORD, QUOTED_SINGLE, QUOTED_DOUBLE, ASSIGNMENT };
+enum class TokenType { WORD, QUOTED_SINGLE, QUOTED_DOUBLE, ASSIGNMENT, PIPE };
 
 /**
  * @brief Represents a single lexical token
@@ -40,6 +40,7 @@ private:
     void skipWhitespace();
     Token readQuotedToken(char quote);
     Token readWordToken();
+    Token readPipeToken();
 
     std::string input_;
     size_t pos_;

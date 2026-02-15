@@ -13,6 +13,8 @@ std::vector<Token> Lexer::tokenize(const std::string& input) {
 
         if (ch == '\'' || ch == '"') {
             tokens.push_back(readQuotedToken(ch));
+        } else if (ch == '|') {
+            tokens.push_back(readPipeToken());
         } else {
             tokens.push_back(readWordToken());
         }
@@ -48,7 +50,7 @@ Token Lexer::readWordToken() {
     std::string value;
 
     while (pos_ < input_.length() && !std::isspace(input_[pos_]) &&
-           input_[pos_] != '\'' && input_[pos_] != '"') {
+           input_[pos_] != '\'' && input_[pos_] != '"' && input_[pos_] != '|') {
         value += input_[pos_++];
     }
 
@@ -57,4 +59,9 @@ Token Lexer::readWordToken() {
     }
 
     return Token(TokenType::WORD, value);
+}
+
+Token Lexer::readPipeToken() {
+    pos_++;
+    return Token(TokenType::PIPE, "|");
 }

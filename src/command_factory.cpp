@@ -11,15 +11,11 @@
 std::unique_ptr<AbstractCommand> CommandFactory::createCommand(
     const std::string& name, const std::vector<std::string>& args) {
     if (name == "cat") {
-        if (args.empty()) {
-            return nullptr;
-        }
-        return std::make_unique<CatCommand>(args[0]);
+        std::string filename = args.empty() ? "" : args[0];
+        return std::make_unique<CatCommand>(filename);
     } else if (name == "wc") {
-        if (args.empty()) {
-            return nullptr;
-        }
-        return std::make_unique<WcCommand>(args[0]);
+        std::string filename = args.empty() ? "" : args[0];
+        return std::make_unique<WcCommand>(filename);
     } else if (name == "echo") {
         return std::make_unique<EchoCommand>(args);
     } else if (name == "pwd") {
