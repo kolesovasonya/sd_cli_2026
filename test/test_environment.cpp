@@ -84,7 +84,6 @@ TEST(EnvironmentTest, MultipleVariableSubstitutions) {
 TEST(EnvironmentTest, ExitCodeVariable) {
     EnvironmentManager& env = EnvironmentManager::getInstance();
 
-    // Set exit code variable
     env.setVariable("?", "0");
     EXPECT_EQ(env.getVariable("?"), "0");
 
@@ -161,6 +160,5 @@ TEST(EnvironmentTest, ExitCodeInSingleQuotes) {
     int ret = executor.execute(command.get(), input, output, error);
 
     EXPECT_EQ(ret, 0);
-    // Single quotes preserve literal text, no substitution
     EXPECT_EQ(output.str(), "$?\n");
 }

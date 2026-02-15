@@ -17,7 +17,6 @@ int main() {
     std::string line;
     int lastExitCode = 0;
 
-    // Initialize $? to 0
     envManager.setVariable("?", "0");
 
     while (true) {
@@ -39,7 +38,6 @@ int main() {
             lastExitCode =
                 executor.execute(command.get(), std::cin, std::cout, std::cerr);
 
-            // Update $? with the last exit code
             envManager.setVariable("?", std::to_string(lastExitCode));
 
             if (ExitCommand::shouldExit()) {
