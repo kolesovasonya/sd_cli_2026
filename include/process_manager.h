@@ -43,7 +43,8 @@ public:
      * @param pids Vector of process IDs to wait for
      * @param exitCodes Output vector to store exit codes
      */
-    void waitForProcesses(const std::vector<pid_t>& pids, std::vector<int>& exitCodes);
+    void waitForProcesses(const std::vector<pid_t>& pids,
+                          std::vector<int>& exitCodes);
 
     /**
      * @brief Terminates a process

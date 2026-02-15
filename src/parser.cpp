@@ -44,7 +44,8 @@ std::unique_ptr<AbstractCommand> Parser::parse(
     return std::make_unique<PipelineCommand>(std::move(commands));
 }
 
-std::unique_ptr<AbstractCommand> Parser::parseSingleCommand(const std::vector<Token>& tokens) {
+std::unique_ptr<AbstractCommand> Parser::parseSingleCommand(
+    const std::vector<Token>& tokens) {
     if (tokens.empty()) {
         return nullptr;
     }
@@ -66,7 +67,8 @@ std::unique_ptr<AbstractCommand> Parser::parseSingleCommand(const std::vector<To
     return factory.createCommand(commandName, args);
 }
 
-std::vector<std::vector<Token>> Parser::splitByPipe(const std::vector<Token>& tokens) {
+std::vector<std::vector<Token>> Parser::splitByPipe(
+    const std::vector<Token>& tokens) {
     std::vector<std::vector<Token>> result;
     std::vector<Token> currentCommand;
 
@@ -84,7 +86,9 @@ std::vector<std::vector<Token>> Parser::splitByPipe(const std::vector<Token>& to
     return result;
 }
 
-bool Parser::validatePipeline(const std::vector<std::vector<Token>>& commandTokens, std::string& errorMessage) {
+bool Parser::validatePipeline(
+    const std::vector<std::vector<Token>>& commandTokens,
+    std::string& errorMessage) {
     if (commandTokens.empty()) {
         errorMessage = "empty pipeline";
         return false;
@@ -131,7 +135,7 @@ std::string Parser::resolveValue(const Token& token) {
         size_t pos = 0;
         while ((pos = result.find('$', pos)) != std::string::npos) {
             size_t end = pos + 1;
-            
+
             // Special case: $? (exit code variable)
             if (end < result.length() && result[end] == '?') {
                 end++;
@@ -141,7 +145,7 @@ std::string Parser::resolveValue(const Token& token) {
                 pos += varValue.length();
                 continue;
             }
-            
+
             // Regular variables
             while (end < result.length() &&
                    (std::isalnum(result[end]) || result[end] == '_')) {

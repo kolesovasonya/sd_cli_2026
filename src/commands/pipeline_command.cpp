@@ -51,12 +51,13 @@ int PipelineCommand::execute(std::istream& input, std::ostream& output,
 
         if (pid == 0) {
             // CHILD PROCESS
-            
+
             redirector.setupChildPipes(i, n);
-            
+
             redirector.closeAllPipes();
 
-            int exitCode = commands_[i]->execute(std::cin, std::cout, std::cerr);
+            int exitCode =
+                commands_[i]->execute(std::cin, std::cout, std::cerr);
             exit(exitCode);
         }
 

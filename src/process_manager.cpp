@@ -97,9 +97,7 @@ int ProcessManager::executeExternal(
 }
 
 #ifndef _WIN32
-pid_t ProcessManager::forkProcess() {
-    return fork();
-}
+pid_t ProcessManager::forkProcess() { return fork(); }
 
 void ProcessManager::waitForProcesses(const std::vector<pid_t>& pids,
                                       std::vector<int>& exitCodes) {

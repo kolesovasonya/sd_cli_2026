@@ -36,7 +36,8 @@ private:
      * @param words Output: number of words
      * @param bytes Output: number of bytes
      */
-    void countFromStream(std::istream& stream, size_t& lines, size_t& words, size_t& bytes);
+    void countFromStream(std::istream& stream, size_t& lines, size_t& words,
+                         size_t& bytes);
 };
 
 #endif

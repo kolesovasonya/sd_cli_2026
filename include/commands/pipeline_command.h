@@ -19,7 +19,8 @@ public:
      * @brief Constructs a pipeline command
      * @param commands Vector of commands to execute in pipeline
      */
-    explicit PipelineCommand(std::vector<std::unique_ptr<AbstractCommand>> commands);
+    explicit PipelineCommand(
+        std::vector<std::unique_ptr<AbstractCommand>> commands);
 
     /**
      * @brief Executes the pipeline
@@ -28,7 +29,8 @@ public:
      * @param error Error stream (shared by all commands)
      * @return Exit code of the last command
      */
-    int execute(std::istream& input, std::ostream& output, std::ostream& error) override;
+    int execute(std::istream& input, std::ostream& output,
+                std::ostream& error) override;
 
 private:
     std::vector<std::unique_ptr<AbstractCommand>> commands_;

@@ -83,14 +83,14 @@ TEST(EnvironmentTest, MultipleVariableSubstitutions) {
 
 TEST(EnvironmentTest, ExitCodeVariable) {
     EnvironmentManager& env = EnvironmentManager::getInstance();
-    
+
     // Set exit code variable
     env.setVariable("?", "0");
     EXPECT_EQ(env.getVariable("?"), "0");
-    
+
     env.setVariable("?", "42");
     EXPECT_EQ(env.getVariable("?"), "42");
-    
+
     env.setVariable("?", "1");
     EXPECT_EQ(env.getVariable("?"), "1");
 }

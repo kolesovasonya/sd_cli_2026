@@ -53,6 +53,4 @@ void IORedirector::closeAllPipes() {
 #endif
 }
 
-IORedirector::~IORedirector() {
-    closeAllPipes();
-}
+IORedirector::~IORedirector() { closeAllPipes(); }

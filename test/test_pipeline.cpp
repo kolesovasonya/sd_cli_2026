@@ -129,8 +129,7 @@ TEST(PipelineTest, PipelineEmptyCommand) {
     std::cerr.rdbuf(old_cerr);
 
     EXPECT_EQ(command, nullptr);
-    EXPECT_TRUE(captured_cerr.str().find("empty command") !=
-                std::string::npos);
+    EXPECT_TRUE(captured_cerr.str().find("empty command") != std::string::npos);
 }
 
 TEST(PipelineTest, PipeWithVariableSubstitution) {

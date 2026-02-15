@@ -36,8 +36,9 @@ int main() {
         auto command = parser.parse(tokens);
 
         if (command) {
-            lastExitCode = executor.execute(command.get(), std::cin, std::cout, std::cerr);
-            
+            lastExitCode =
+                executor.execute(command.get(), std::cin, std::cout, std::cerr);
+
             // Update $? with the last exit code
             envManager.setVariable("?", std::to_string(lastExitCode));
 
