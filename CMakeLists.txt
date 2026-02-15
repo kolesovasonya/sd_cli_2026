@@ -15,6 +15,7 @@ set(SOURCES
     src/command_factory.cpp
     src/command_executor.cpp
     src/process_manager.cpp
+    src/io_redirector.cpp
     src/commands/cat_command.cpp
     src/commands/wc_command.cpp
     src/commands/echo_command.cpp
@@ -57,6 +58,7 @@ set(TEST_SOURCES
     src/command_factory.cpp
     src/command_executor.cpp
     src/process_manager.cpp
+    src/io_redirector.cpp
     src/commands/cat_command.cpp
     src/commands/wc_command.cpp
     src/commands/echo_command.cpp

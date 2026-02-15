@@ -1,14 +1,11 @@
 #include "commands/pipeline_command.h"
 
-#include <sstream>
+#include "io_redirector.h"
+#include "process_manager.h"
 
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <signal.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
 #include <cstring>
 #endif
 
@@ -32,53 +29,32 @@ int PipelineCommand::execute(std::istream& input, std::ostream& output,
 
     int n = commands_.size();
 
-    std::vector<int*> pipes;
-    for (int i = 0; i < n - 1; i++) {
-        int* pipefd = new int[2];
-        if (pipe(pipefd) == -1) {
-            error << "Failed to create pipe: " << strerror(errno) << std::endl;
-            for (auto p : pipes) {
-                close(p[0]);
-                close(p[1]);
-                delete[] p;
-            }
-            return 1;
-        }
-        pipes.push_back(pipefd);
+    IORedirector redirector;
+    if (!redirector.createPipes(n - 1)) {
+        error << "Failed to create pipes: " << strerror(errno) << std::endl;
+        return 1;
     }
 
+    ProcessManager processManager;
     std::vector<pid_t> pids;
+
     for (int i = 0; i < n; i++) {
-        pid_t pid = fork();
+        pid_t pid = processManager.forkProcess();
 
         if (pid < 0) {
             error << "Fork failed: " << strerror(errno) << std::endl;
-            for (auto p : pipes) {
-                close(p[0]);
-                close(p[1]);
-                delete[] p;
-            }
             for (pid_t p : pids) {
-                kill(p, SIGTERM);
+                processManager.terminateProcess(p);
             }
             return 1;
         }
 
         if (pid == 0) {
             // CHILD PROCESS
-
-            if (i > 0) {
-                dup2(pipes[i - 1][0], STDIN_FILENO);
-            }
-
-            if (i < n - 1) {
-                dup2(pipes[i][1], STDOUT_FILENO);
-            }
-
-            for (auto p : pipes) {
-                close(p[0]);
-                close(p[1]);
-            }
+            
+            redirector.setupChildPipes(i, n);
+            
+            redirector.closeAllPipes();
 
             int exitCode = commands_[i]->execute(std::cin, std::cout, std::cerr);
             exit(exitCode);
@@ -88,22 +64,10 @@ int PipelineCommand::execute(std::istream& input, std::ostream& output,
         pids.push_back(pid);
     }
 
-    for (auto p : pipes) {
-        close(p[0]);
-        close(p[1]);
-        delete[] p;
-    }
+    redirector.closeAllPipes();
 
-    std::vector<int> exitCodes(n);
-    for (int i = 0; i < n; i++) {
-        int status;
-        waitpid(pids[i], &status, 0);
-        if (WIFEXITED(status)) {
-            exitCodes[i] = WEXITSTATUS(status);
-        } else {
-            exitCodes[i] = 1;
-        }
-    }
+    std::vector<int> exitCodes;
+    processManager.waitForProcesses(pids, exitCodes);
 
     // Return exit code of the last command
     return exitCodes[n - 1];

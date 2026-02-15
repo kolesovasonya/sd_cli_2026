@@ -7,6 +7,7 @@
 
 #include <sstream>
 #else
+#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -94,3 +95,29 @@ int ProcessManager::executeExternal(
     return 1;
 #endif
 }
+
+#ifndef _WIN32
+pid_t ProcessManager::forkProcess() {
+    return fork();
+}
+
+void ProcessManager::waitForProcesses(const std::vector<pid_t>& pids,
+                                      std::vector<int>& exitCodes) {
+    exitCodes.resize(pids.size());
+
+    for (size_t i = 0; i < pids.size(); i++) {
+        int status;
+        waitpid(pids[i], &status, 0);
+
+        if (WIFEXITED(status)) {
+            exitCodes[i] = WEXITSTATUS(status);
+        } else {
+            exitCodes[i] = 1;
+        }
+    }
+}
+
+bool ProcessManager::terminateProcess(pid_t pid) {
+    return kill(pid, SIGTERM) == 0;
+}
+#endif
