@@ -53,11 +53,11 @@ int GrepCommand::execute(std::istream& input, std::ostream& output,
         return 1;
     }
 
-    const bool whole_word   = result["w"].as<bool>();
-    const bool ignore_case  = result["i"].as<bool>();
-    const int  after_ctx    = result["A"].as<int>();
-    std::string pattern     = result["pattern"].as<std::string>();
-    const std::string file  = result["file"].as<std::string>();
+    const bool whole_word = result["w"].as<bool>();
+    const bool ignore_case = result["i"].as<bool>();
+    const int after_ctx = result["A"].as<int>();
+    std::string pattern = result["pattern"].as<std::string>();
+    const std::string file = result["file"].as<std::string>();
 
     if (after_ctx < 0) {
         error << "grep: -A value must be non-negative" << std::endl;
@@ -105,8 +105,8 @@ int GrepCommand::execute(std::istream& input, std::ostream& output,
     for (size_t i = 0; i < lines.size(); i++) {
         if (std::regex_search(lines[i], re)) {
             found_any = true;
-            size_t end = std::min(i + static_cast<size_t>(after_ctx),
-                                  lines.size() - 1);
+            size_t end =
+                std::min(i + static_cast<size_t>(after_ctx), lines.size() - 1);
             for (size_t j = i; j <= end; j++) {
                 should_print[j] = true;
             }
@@ -122,8 +122,8 @@ void GrepCommand::printWithSeparators(const std::vector<std::string>& lines,
                                       const std::vector<bool>& should_print,
                                       int after_context,
                                       std::ostream& output) const {
-    bool prev_printed  = false;
-    bool need_sep      = false;
+    bool prev_printed = false;
+    bool need_sep = false;
 
     for (size_t i = 0; i < lines.size(); i++) {
         if (should_print[i]) {
@@ -134,7 +134,7 @@ void GrepCommand::printWithSeparators(const std::vector<std::string>& lines,
             output << lines[i] << "\n";
             prev_printed = true;
         } else if (prev_printed) {
-            need_sep     = true;
+            need_sep = true;
             prev_printed = false;
         }
     }

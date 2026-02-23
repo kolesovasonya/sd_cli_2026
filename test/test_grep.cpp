@@ -27,7 +27,8 @@ static int runGrep(const std::vector<std::string>& args,
 
 TEST(GrepTest, BasicSearchMatch) {
     std::string out, err;
-    int code = runGrep({"hello"}, "hello world\nfoo bar\nhello again\n", out, err);
+    int code =
+        runGrep({"hello"}, "hello world\nfoo bar\nhello again\n", out, err);
 
     EXPECT_EQ(code, 0);
     EXPECT_EQ(out, "hello world\nhello again\n");
@@ -165,8 +166,7 @@ TEST(GrepTest, AfterContextSeparatorBetweenGroups) {
 
 TEST(GrepTest, AfterContextNoSeparatorWhenContextZero) {
     std::string out, err;
-    int code = runGrep({"-A", "0", "match"},
-                       "match\ngap\nmatch\n", out, err);
+    int code = runGrep({"-A", "0", "match"}, "match\ngap\nmatch\n", out, err);
 
     EXPECT_EQ(code, 0);
     EXPECT_EQ(out, "match\nmatch\n");
