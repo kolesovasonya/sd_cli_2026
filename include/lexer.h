@@ -15,13 +15,16 @@ enum class TokenType { WORD, QUOTED_SINGLE, QUOTED_DOUBLE, ASSIGNMENT, PIPE };
 struct Token {
     TokenType type;
     std::string value;
+    bool space_before;
 
     /**
      * @brief Constructs token with type and value
      * @param t Token type
      * @param v Token value
+     * @param sb Whether whitespace preceded this token
      */
-    Token(TokenType t, const std::string& v) : type(t), value(v) {}
+    Token(TokenType t, const std::string& v, bool sb = true)
+        : type(t), value(v), space_before(sb) {}
 };
 
 /**

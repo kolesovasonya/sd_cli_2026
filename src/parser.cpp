@@ -51,10 +51,16 @@ std::unique_ptr<AbstractCommand> Parser::parseSingleCommand(
     }
 
     std::vector<std::string> args;
+    std::string current;
 
-    for (const auto& token : tokens) {
-        args.push_back(resolveValue(token));
+    for (size_t i = 0; i < tokens.size(); i++) {
+        if (i > 0 && tokens[i].space_before) {
+            args.push_back(current);
+            current.clear();
+        }
+        current += resolveValue(tokens[i]);
     }
+    args.push_back(current);
 
     if (args.empty()) {
         return nullptr;
@@ -125,49 +131,45 @@ void Parser::handleAssignment(const std::vector<Token>& tokens) {
     }
 }
 
+std::string Parser::expandVariables(const std::string& input) {
+    std::string result = input;
+    size_t pos = 0;
+    while ((pos = result.find('$', pos)) != std::string::npos) {
+        size_t end = pos + 1;
+
+        if (end < result.length() && result[end] == '?') {
+            end++;
+            std::string varValue = envManager_.getVariable("?");
+            result.replace(pos, end - pos, varValue);
+            pos += varValue.length();
+            continue;
+        }
+
+        while (end < result.length() &&
+               (std::isalnum(result[end]) || result[end] == '_')) {
+            end++;
+        }
+
+        if (end > pos + 1) {
+            std::string varName = result.substr(pos + 1, end - pos - 1);
+            std::string varValue = envManager_.getVariable(varName);
+            result.replace(pos, end - pos, varValue);
+            pos += varValue.length();
+        } else {
+            pos++;
+        }
+    }
+    return result;
+}
+
 std::string Parser::resolveValue(const Token& token) {
     if (token.type == TokenType::QUOTED_SINGLE) {
         return token.value;
     }
 
-    if (token.type == TokenType::QUOTED_DOUBLE) {
-        std::string result = token.value;
-        size_t pos = 0;
-        while ((pos = result.find('$', pos)) != std::string::npos) {
-            size_t end = pos + 1;
-
-            // Special case: $? (exit code variable)
-            if (end < result.length() && result[end] == '?') {
-                end++;
-                std::string varName = "?";
-                std::string varValue = envManager_.getVariable(varName);
-                result.replace(pos, end - pos, varValue);
-                pos += varValue.length();
-                continue;
-            }
-
-            // Regular variables
-            while (end < result.length() &&
-                   (std::isalnum(result[end]) || result[end] == '_')) {
-                end++;
-            }
-
-            if (end > pos + 1) {
-                std::string varName = result.substr(pos + 1, end - pos - 1);
-                std::string varValue = envManager_.getVariable(varName);
-                result.replace(pos, end - pos, varValue);
-                pos += varValue.length();
-            } else {
-                pos++;
-            }
-        }
-        return result;
-    }
-
-    if (token.type == TokenType::WORD && !token.value.empty() &&
-        token.value[0] == '$') {
-        std::string varName = token.value.substr(1);
-        return envManager_.getVariable(varName);
+    if (token.type == TokenType::QUOTED_DOUBLE ||
+        token.type == TokenType::WORD) {
+        return expandVariables(token.value);
     }
 
     return token.value;

@@ -31,6 +31,7 @@ private:
     bool isAssignment(const std::vector<Token>& tokens);
     void handleAssignment(const std::vector<Token>& tokens);
     std::string resolveValue(const Token& token);
+    std::string expandVariables(const std::string& input);
 
     /**
      * @brief Splits tokens by PIPE operator
