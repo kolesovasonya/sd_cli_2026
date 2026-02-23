@@ -5,6 +5,7 @@
 #include "commands/echo_command.h"
 #include "commands/exit_command.h"
 #include "commands/external_command.h"
+#include "commands/grep_command.h"
 #include "commands/pwd_command.h"
 #include "commands/wc_command.h"
 
@@ -22,6 +23,8 @@ std::unique_ptr<AbstractCommand> CommandFactory::createCommand(
         return std::make_unique<PwdCommand>();
     } else if (name == "exit") {
         return std::make_unique<ExitCommand>();
+    } else if (name == "grep") {
+        return std::make_unique<GrepCommand>(args);
     } else {
         return std::make_unique<ExternalCommand>(name, args);
     }
@@ -29,5 +32,5 @@ std::unique_ptr<AbstractCommand> CommandFactory::createCommand(
 
 bool CommandFactory::isBuiltinCommand(const std::string& name) const {
     return name == "cat" || name == "wc" || name == "echo" || name == "pwd" ||
-           name == "exit";
+           name == "exit" || name == "grep";
 }
