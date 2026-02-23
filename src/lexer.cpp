@@ -15,7 +15,7 @@ std::vector<Token> Lexer::tokenize(const std::string& input) {
         char ch = input_[pos_];
 
         Token tok = (ch == '\'' || ch == '"') ? readQuotedToken(ch)
-                  : (ch == '|')               ? readPipeToken()
+                    : (ch == '|')             ? readPipeToken()
                                               : readWordToken();
         tok.space_before = hadSpace;
         tokens.push_back(tok);
