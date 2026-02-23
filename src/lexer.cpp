@@ -6,18 +6,19 @@ std::vector<Token> Lexer::tokenize(const std::string& input) {
     std::vector<Token> tokens;
 
     while (pos_ < input_.length()) {
+        size_t posBefore = pos_;
         skipWhitespace();
         if (pos_ >= input_.length()) break;
 
+        bool hadSpace = tokens.empty() || (pos_ > posBefore);
+
         char ch = input_[pos_];
 
-        if (ch == '\'' || ch == '"') {
-            tokens.push_back(readQuotedToken(ch));
-        } else if (ch == '|') {
-            tokens.push_back(readPipeToken());
-        } else {
-            tokens.push_back(readWordToken());
-        }
+        Token tok = (ch == '\'' || ch == '"') ? readQuotedToken(ch)
+                  : (ch == '|')               ? readPipeToken()
+                                              : readWordToken();
+        tok.space_before = hadSpace;
+        tokens.push_back(tok);
     }
 
     return tokens;

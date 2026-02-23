@@ -162,3 +162,121 @@ TEST(EnvironmentTest, ExitCodeInSingleQuotes) {
     EXPECT_EQ(ret, 0);
     EXPECT_EQ(output.str(), "$?\n");
 }
+
+TEST(EnvironmentTest, AdjacentVariableSubstitution) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("a", "ex");
+    env.setVariable("b", "it");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo $a$b");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "exit\n");
+}
+
+TEST(EnvironmentTest, VariableWithLiteralPrefix) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("EXT", "cpp");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo file.$EXT");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "file.cpp\n");
+}
+
+TEST(EnvironmentTest, VariableWithLiteralSuffix) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("BASE", "hello");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo $BASE_world");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(output.str(), "\n");
+}
+
+TEST(EnvironmentTest, ThreeAdjacentVariables) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("x", "foo");
+    env.setVariable("y", "bar");
+    env.setVariable("z", "baz");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo $x$y$z");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "foobarbaz\n");
+}
+
+TEST(EnvironmentTest, AdjacentVariablesInDoubleQuotes) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("p", "hello");
+    env.setVariable("q", "world");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo \"$p$q\"");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "helloworld\n");
+}
