@@ -23,9 +23,11 @@ set(SOURCES
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
     src/commands/pipeline_command.cpp
+    src/commands/grep_command.cpp
 )
 
 add_executable(cli_app ${SOURCES})
+target_link_libraries(cli_app cxxopts)
 
 if(WIN32)
     target_compile_definitions(cli_app PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -41,7 +43,13 @@ FetchContent_Declare(
     GIT_TAG release-1.12.1
 )
 
-FetchContent_MakeAvailable(googletest)
+FetchContent_Declare(
+    cxxopts
+    GIT_REPOSITORY https://github.com/jarro2783/cxxopts.git
+    GIT_TAG v3.2.0
+)
+
+FetchContent_MakeAvailable(googletest cxxopts)
 
 set(TEST_SOURCES
     test/test_main.cpp
@@ -66,9 +74,11 @@ set(TEST_SOURCES
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
     src/commands/pipeline_command.cpp
+    src/commands/grep_command.cpp
+    test/test_grep.cpp
 )
 
 add_executable(cli_tests ${TEST_SOURCES})
-target_link_libraries(cli_tests gtest gtest_main)
+target_link_libraries(cli_tests gtest gtest_main cxxopts)
 
 add_test(NAME cli_tests COMMAND cli_tests)
