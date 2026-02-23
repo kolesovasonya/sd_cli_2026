@@ -6,6 +6,14 @@ CatCommand::CatCommand(const std::string& filename) : filename_(filename) {}
 
 int CatCommand::execute(std::istream& input, std::ostream& output,
                         std::ostream& error) {
+    if (filename_.empty() || filename_ == "-") {
+        std::string line;
+        while (std::getline(input, line)) {
+            output << line << std::endl;
+        }
+        return 0;
+    }
+
     std::ifstream file(filename_);
 
     if (!file.is_open()) {

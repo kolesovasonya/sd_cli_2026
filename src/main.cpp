@@ -15,6 +15,9 @@ int main() {
     CommandExecutor executor;
 
     std::string line;
+    int lastExitCode = 0;
+
+    envManager.setVariable("?", "0");
 
     while (true) {
         std::cout << "> ";
@@ -32,7 +35,10 @@ int main() {
         auto command = parser.parse(tokens);
 
         if (command) {
-            executor.execute(command.get(), std::cin, std::cout, std::cerr);
+            lastExitCode =
+                executor.execute(command.get(), std::cin, std::cout, std::cerr);
+
+            envManager.setVariable("?", std::to_string(lastExitCode));
 
             if (ExitCommand::shouldExit()) {
                 break;

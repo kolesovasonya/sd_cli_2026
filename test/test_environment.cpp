@@ -80,3 +80,85 @@ TEST(EnvironmentTest, MultipleVariableSubstitutions) {
     EXPECT_EQ(ret, 0);
     EXPECT_EQ(output.str(), "Hello World\n");
 }
+
+TEST(EnvironmentTest, ExitCodeVariable) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+
+    env.setVariable("?", "0");
+    EXPECT_EQ(env.getVariable("?"), "0");
+
+    env.setVariable("?", "42");
+    EXPECT_EQ(env.getVariable("?"), "42");
+
+    env.setVariable("?", "1");
+    EXPECT_EQ(env.getVariable("?"), "1");
+}
+
+TEST(EnvironmentTest, ExitCodeSubstitution) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("?", "123");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo $?");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "123\n");
+}
+
+TEST(EnvironmentTest, ExitCodeInDoubleQuotes) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("?", "42");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo \"Exit code: $?\"");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "Exit code: 42\n");
+}
+
+TEST(EnvironmentTest, ExitCodeInSingleQuotes) {
+    EnvironmentManager& env = EnvironmentManager::getInstance();
+    env.setVariable("?", "99");
+
+    Parser parser(env);
+    Lexer lexer;
+    CommandExecutor executor;
+
+    auto tokens = lexer.tokenize("echo '$?'");
+    auto command = parser.parse(tokens);
+
+    ASSERT_NE(command, nullptr);
+
+    std::ostringstream output;
+    std::ostringstream error;
+    std::istringstream input;
+
+    int ret = executor.execute(command.get(), input, output, error);
+
+    EXPECT_EQ(ret, 0);
+    EXPECT_EQ(output.str(), "$?\n");
+}

@@ -7,6 +7,16 @@ WcCommand::WcCommand(const std::string& filename) : filename_(filename) {}
 
 int WcCommand::execute(std::istream& input, std::ostream& output,
                        std::ostream& error) {
+    size_t lines = 0;
+    size_t words = 0;
+    size_t bytes = 0;
+
+    if (filename_.empty() || filename_ == "-") {
+        countFromStream(input, lines, words, bytes);
+        output << lines << " " << words << " " << bytes << std::endl;
+        return 0;
+    }
+
     std::ifstream file(filename_);
 
     if (!file.is_open()) {
@@ -15,12 +25,22 @@ int WcCommand::execute(std::istream& input, std::ostream& output,
         return 1;
     }
 
-    size_t lines = 0;
-    size_t words = 0;
-    size_t bytes = 0;
+    countFromStream(file, lines, words, bytes);
+    output << lines << " " << words << " " << bytes << " " << filename_
+           << std::endl;
+
+    file.close();
+    return 0;
+}
+
+void WcCommand::countFromStream(std::istream& stream, size_t& lines,
+                                size_t& words, size_t& bytes) {
+    lines = 0;
+    words = 0;
+    bytes = 0;
 
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(stream, line)) {
         lines++;
         bytes += line.length() + 1;
 
@@ -30,10 +50,4 @@ int WcCommand::execute(std::istream& input, std::ostream& output,
             words++;
         }
     }
-
-    output << lines << " " << words << " " << bytes << " " << filename_
-           << std::endl;
-
-    file.close();
-    return 0;
 }

@@ -15,12 +15,14 @@ set(SOURCES
     src/command_factory.cpp
     src/command_executor.cpp
     src/process_manager.cpp
+    src/io_redirector.cpp
     src/commands/cat_command.cpp
     src/commands/wc_command.cpp
     src/commands/echo_command.cpp
     src/commands/pwd_command.cpp
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
+    src/commands/pipeline_command.cpp
 )
 
 add_executable(cli_app ${SOURCES})
@@ -48,6 +50,7 @@ set(TEST_SOURCES
     test/test_commands.cpp
     test/test_quotes.cpp
     test/test_environment.cpp
+    test/test_pipeline.cpp
     src/input_processor.cpp
     src/lexer.cpp
     src/parser.cpp
@@ -55,12 +58,14 @@ set(TEST_SOURCES
     src/command_factory.cpp
     src/command_executor.cpp
     src/process_manager.cpp
+    src/io_redirector.cpp
     src/commands/cat_command.cpp
     src/commands/wc_command.cpp
     src/commands/echo_command.cpp
     src/commands/pwd_command.cpp
     src/commands/exit_command.cpp
     src/commands/external_command.cpp
+    src/commands/pipeline_command.cpp
 )
 
 add_executable(cli_tests ${TEST_SOURCES})
